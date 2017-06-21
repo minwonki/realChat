@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "963085710075",
+    "firebase_url": "https://realchat-4646d.firebaseio.com",
+    "project_id": "realchat-4646d",
+    "storage_bucket": "realchat-4646d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963085710075:android:b14adfa5f2531f3c",
+        "android_client_info": {
+          "package_name": "com.example.wkimin.realchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963085710075-nu2c7vctbpf8565op09efqevs9sejb9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wkimin.realchat",
+            "certificate_hash": "34c725de20506dbde73240d62d365dcdb6499a38"
+          }
+        },
+        {
+          "client_id": "963085710075-8t782420hm2h9hfrvaosh8sol2sfqp8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhFftojYG3L5H-iQogTOOZDcDCcWT0aTw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963085710075-8t782420hm2h9hfrvaosh8sol2sfqp8c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

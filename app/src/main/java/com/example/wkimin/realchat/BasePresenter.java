@@ -6,5 +6,5 @@ package com.example.wkimin.realchat;
  */
 
 public interface BasePresenter {
-    void loadData();
+    void setChildEvent();
 }

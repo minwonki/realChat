@@ -1,34 +1,21 @@
 package com.example.wkimin.realchat.data.source;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import com.example.wkimin.realchat.data.source.local.ChatLocalDataSource;
+import com.example.wkimin.realchat.data.source.remote.ChatRemoteDataSource;
 
 /**
  * Created by wkimin on 2017-06-21.
  *
  */
 
-public class ChatRepository {
+public class ChatRepository implements ChatDataSource {
     private static ChatRepository INSTANCE = null;
-    private final Realm realm;
-    private final DatabaseReference fireBaseRef;
+    private final ChatLocalDataSource chatLocalDataSource;
+    private final ChatRemoteDataSource chatRemoteDataSource;
 
     private ChatRepository() {
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .build();
-        Realm.setDefaultConfiguration(config);
-
-        realm = Realm.getDefaultInstance();
-
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        fireBaseRef = database.getReference().child("Android");
+        chatLocalDataSource = ChatLocalDataSource.getInstance();
+        chatRemoteDataSource = ChatRemoteDataSource.getInstance();
     }
 
     public static ChatRepository getInstance() {
@@ -38,23 +25,15 @@ public class ChatRepository {
         return INSTANCE;
     }
 
-    public static void destroyInstance() {
-        INSTANCE = null;
+    @Override
+    public void getChatEvent(final addChatCallback addChatCallback) {
+        chatRemoteDataSource.getChatEvent(addChatCallback);
+        chatLocalDataSource.getChatEvent(addChatCallback);
     }
 
-    public void sendMsg(String userName, String userMsg) {
-        Map<String, Object> temp_map = new HashMap<>();
-        String temp_key = fireBaseRef.push().getKey();
-        fireBaseRef.updateChildren(temp_map);
-
-        DatabaseReference msg_root = fireBaseRef.child(temp_key);
-        Map<String, Object> msg_map = new HashMap<>();
-        msg_map.put("name", userName);
-        msg_map.put("msg", userMsg);
-        msg_root.updateChildren(msg_map);
-    }
-
-    public DatabaseReference getFireBaseRoot() {
-        return fireBaseRef;
+    @Override
+    public void sendMsg(String name, String msg) {
+        chatRemoteDataSource.sendMsg(name, msg);
+        chatLocalDataSource.sendMsg(name, msg);
     }
 }

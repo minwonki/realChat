@@ -53,14 +53,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void refreshChat() {
-    }
-
-    @Override
-    public void showMessage() {
-    }
-
-    @Override
     public void appendChat(String chat_name, String chat_msg) {
         tv_chat.append(chat_name + ":" + chat_msg + "\n");
         et_msg.setText("");

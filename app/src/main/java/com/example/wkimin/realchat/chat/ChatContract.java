@@ -8,11 +8,8 @@ import com.example.wkimin.realchat.BaseView;
  *
  */
 
-public class ChatContract {
+class ChatContract {
     interface View extends BaseView<Presenter> {
-        void refreshChat();
-        void showMessage();
-
         void appendChat(String chat_name, String chat_msg);
     }
 

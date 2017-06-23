@@ -18,21 +18,20 @@ class ChatPresenter implements ChatContract.Presenter {
         this.chatView = chatActivity;
         this.chatRepository = instance;
         this.chatView.setPresenter(this);
-        setChildEvent();
     }
 
     @Override
     public void setChildEvent() {
-        chatRepository.getChatEvent(new ChatDataSource.addChatCallback(){
+        chatRepository.getMsg(new ChatDataSource.addChatCallback(){
             @Override
             public void onChatAdd(ChatMessage chatMessage) {
-                chatView.appendChat(chatMessage.getUserName(), chatMessage.getUserMessage());
+                chatView.appendChat(chatMessage.getName(), chatMessage.getMessage());
             }
         });
     }
 
     @Override
     public void sendMessage(String userName, String userMsg) {
-        chatRepository.sendMsg(userName, userMsg);
+        chatRepository.addMsg(userName, userMsg);
     }
 }

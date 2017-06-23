@@ -50,6 +50,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @Override
     public void setPresenter(ChatContract.Presenter presenter) {
         this.mPresenter = presenter;
+        this.mPresenter.setChildEvent();
     }
 
     @Override

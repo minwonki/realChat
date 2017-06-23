@@ -26,14 +26,17 @@ public class ChatRepository implements ChatDataSource {
     }
 
     @Override
-    public void getChatEvent(final addChatCallback addChatCallback) {
-        chatRemoteDataSource.getChatEvent(addChatCallback);
-        chatLocalDataSource.getChatEvent(addChatCallback);
+    public void addMsg(String name, String msg) {
+        chatRemoteDataSource.addChatMsg(name, msg);
     }
 
     @Override
-    public void sendMsg(String name, String msg) {
-        chatRemoteDataSource.sendMsg(name, msg);
-        chatLocalDataSource.sendMsg(name, msg);
+    public void getMsg(addChatCallback addChatCallback) {
+        // TODO : online, offline  상태 구분해서 기능 개발 필요.
+        //  offline 경우에  Local Database 데이터 가져 오기
+        if (!chatRemoteDataSource.isOnline()) {
+            chatLocalDataSource.getAllMessage(addChatCallback);
+        }
+        chatRemoteDataSource.getChatMsg(addChatCallback);
     }
 }

@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,15 +20,40 @@ import java.util.Map;
  *
  */
 
-public class ChatRemoteDataSource implements ChatDataSource {
+public class ChatRemoteDataSource implements ChatDataSource.Remote {
 
     private final String TAG = getClass().getSimpleName();
     private static ChatRemoteDataSource INSTANCE;
     private final DatabaseReference fireBaseRef;
+    private boolean isOnline = false;
 
     private ChatRemoteDataSource() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.setPersistenceEnabled(true);
         fireBaseRef = database.getReference().child("Android");
+        checkOnline();
+    }
+
+    private void checkOnline() {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    System.out.println("connected");
+                    isOnline = true;
+                } else {
+                    isOnline = false;
+                    System.out.println("not connected");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.err.println("Listener was cancelled");
+            }
+        });
     }
 
     public static ChatRemoteDataSource getInstance() {
@@ -37,9 +63,10 @@ public class ChatRemoteDataSource implements ChatDataSource {
         return INSTANCE;
     }
 
+
     @Override
-    public void getChatEvent(final addChatCallback addChatCallback) {
-        Log.i(TAG,"getChatEvent:");
+    public void getChatMsg(final addChatCallback addChatCallback) {
+        Log.i(TAG,"getChatMsg:");
         fireBaseRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -68,10 +95,11 @@ public class ChatRemoteDataSource implements ChatDataSource {
 
             private void append_chat(DataSnapshot dataSnapshot) {
                 Iterator i = dataSnapshot.getChildren().iterator();
+                String msgKey = dataSnapshot.getKey();
                 while (i.hasNext()) {
                     String chat_msg = (String) ((DataSnapshot)i.next()).getValue();
                     String chat_name = (String) ((DataSnapshot)i.next()).getValue();
-                    ChatMessage chatMessage = new ChatMessage(chat_name, chat_msg);
+                    ChatMessage chatMessage = new ChatMessage(msgKey, chat_name, chat_msg);
                     addChatCallback.onChatAdd(chatMessage);
                 }
             }
@@ -79,8 +107,8 @@ public class ChatRemoteDataSource implements ChatDataSource {
     }
 
     @Override
-    public void sendMsg(String name, String msg) {
-        Log.i(TAG,"sendMsg:"+name+":"+msg);
+    public void addChatMsg(String name, String msg) {
+        Log.i(TAG,"addChatMsg:"+name+":"+msg);
         Map<String, Object> temp_map = new HashMap<>();
         String temp_key = fireBaseRef.push().getKey();
         fireBaseRef.updateChildren(temp_map);
@@ -90,5 +118,20 @@ public class ChatRemoteDataSource implements ChatDataSource {
         msg_map.put("name", name);
         msg_map.put("msg", msg);
         msg_root.updateChildren(msg_map);
+    }
+
+    @Override
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    @Override
+    public void addMsg(String name, String msg) {
+        addChatMsg(name, msg);
+    }
+
+    @Override
+    public void getMsg(addChatCallback addChatCallback) {
+        getChatMsg(addChatCallback);
     }
 }

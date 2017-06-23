@@ -8,11 +8,23 @@ import com.example.wkimin.realchat.data.ChatMessage;
  */
 
 public interface ChatDataSource {
-    void getChatEvent(addChatCallback addChatCallback);
 
     interface addChatCallback {
         void onChatAdd(ChatMessage chatMessage);
     }
 
-    void sendMsg(String name, String msg);
+    interface Local extends  ChatDataSource{
+        void saveLocalDatabase(ChatMessage chatMessage);
+        void getAllMessage(addChatCallback addChatCallback);
+    }
+
+    interface Remote extends  ChatDataSource{
+        void getChatMsg(addChatCallback addChatCallback);
+        void addChatMsg(String name, String msg);
+
+        boolean isOnline();
+    }
+
+    void addMsg(String name, String msg);
+    void getMsg(addChatCallback addChatCallback);
 }

@@ -30,6 +30,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         createUserName();
         new ChatPresenter(this, ChatRepository.getInstance());
         Log.i(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
+
     }
 
     private void bindingUI() {

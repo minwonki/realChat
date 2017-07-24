@@ -32,6 +32,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         Log.i(TAG, "onCreate");
         Log.i(TAG, "onCreate");
         Log.i(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
     }
 
     private void bindingUI() {
